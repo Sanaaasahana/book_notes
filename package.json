@@ -2,14 +2,14 @@
   "name": "book-notes",
   "version": "1.0.0",
   "description": "A full stack book notes application",
-  "license": "MIT",  // Added license (MIT is common for open-source)
-  "engines": {       // Added Node/npm version constraints
+  "license": "MIT",  
+  "engines": {       
     "node": ">=18.x",
     "npm": ">=9.x"
   },
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",  // ⚠️ Fixed path (remove 'server/' if app.js is in root)
+    "dev": "nodemon app.js",  
     "build": "echo 'Backend build complete'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

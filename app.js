@@ -20,18 +20,7 @@ const poolConfig = process.env.DATABASE_URL
       ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
     };
 
-const pool = new Pool({
-  ...poolConfig,
-  max: 20,
-  idleTimeoutMillis: 30000
-});
-// Initialize PostgreSQL pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { 
-    rejectUnauthorized: false 
-  } : false
-});
+
 
 // Test DB route (now has access to pool)
 app.get('/api/test-db', async (req, res) => {

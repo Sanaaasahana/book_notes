@@ -5,7 +5,26 @@ const cors = require('cors');
 const { Pool } = require('pg'); // Add this import
 
 const app = express();
+// Database configuration with fallbacks
+const poolConfig = process.env.DATABASE_URL 
+  ? { 
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    }
+  : {
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
+    };
 
+const pool = new Pool({
+  ...poolConfig,
+  max: 20,
+  idleTimeoutMillis: 30000
+});
 // Initialize PostgreSQL pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

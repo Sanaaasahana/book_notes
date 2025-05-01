@@ -7,18 +7,36 @@ const { Pool } = require('pg');
 const app = express();
 
 // Database configuration with fallbacks
+// In your backend app.js
+const { Pool } = require('pg');
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    require: true, // Required for Neon
-    rejectUnauthorized: false
-  }
+  ssl: process.env.NODE_ENV === 'production' ? { 
+    require: true,
+    rejectUnauthorized: false 
+  } : false,
+  max: 20,                 // Maximum number of connections
+  idleTimeoutMillis: 30000, // Close idle connections after 30s
+  connectionTimeoutMillis: 2000 // Fail fast if can't connect
 });
 
-// Test connection
-pool.query('SELECT NOW()')
-  .then(res => console.log('✅ Connected to Neon at:', res.rows[0].now))
-  .catch(err => console.error('❌ Neon connection failed:', err));
+// Error handling for unexpected pool errors
+pool.on('error', (err) => {
+  console.error('Unexpected database error:', err);
+  process.exit(-1); // Exit process on critical DB errors
+});
+
+// Test the connection immediately
+(async () => {
+  try {
+    await pool.query('SELECT NOW()');
+    console.log('✅ Database connected successfully');
+  } catch (err) {
+    console.error('❌ Database connection failed:', err);
+    process.exit(1);
+  }
+})();
 
 // Test DB route
 app.get('/api/test-db', async (req, res) => {

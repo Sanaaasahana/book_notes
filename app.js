@@ -44,8 +44,14 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // Middleware
+const express = require('express');
+const app = express();
 
+// Body parsing middleware
+app.use(express.json());  // For parsing application/json
+app.use(express.urlencoded({ extended: true }));  // For parsing application/x-www-form-urlencoded
 
+// Your custom CORS middleware
 app.use((req, res, next) => {
   const allowedOrigins = [
     'https://sahanabooknotes.netlify.app',
@@ -67,6 +73,17 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Sample route for registration
+app.post('/api/auth/register', (req, res) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  // Your registration logic here
+  res.status(201).json({ message: 'User registered successfully' });
+});
+
 
 
 // Routes

@@ -4,6 +4,22 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
+app.get('/api/test-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ 
+      status: 'Database connection successful',
+      time: result.rows[0].now,
+      database: process.env.DATABASE_URL.split('@')[1]?.split('/')[0] || 'unknown'
+    });
+  } catch (err) {
+    console.error('Database connection error:', err);
+    res.status(500).json({ 
+      error: 'Database connection failed',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+});
 
 // Middleware
 app.use(cors());

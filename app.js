@@ -11,15 +11,17 @@ const app = express();
 
 // Initialize the pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { 
-    rejectUnauthorized: false,
-    sslmode: 'require'
+  user: 'postgres',
+  host: 'db.viyprtgvlmsvogskilre.supabase.co',
+  database: 'postgres',
+  password: 'Mithun2605#sahana', // Make sure to encode or use process.env here
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false
   },
-  port: 5432, // Supabase connection pool port
-  max: 10, // Stay within free tier limits
+  max: 10,
   idleTimeoutMillis: 30000,
-  family:4
+  family: 4 //  Force IPv4
 });
 
 // Verify connection on startup

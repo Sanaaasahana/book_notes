@@ -7,24 +7,17 @@ const { Pool } = require('pg');
 const app = express();
 
 // Database configuration with fallbacks
-const poolConfig = process.env.DATABASE_URL 
-  ? { 
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    }
-  : {
-      user: process.env.DB_USER,
-      host: process.env.DB_HOST,
-      database: process.env.DB_NAME,
-      password: process.env.DB_PASSWORD,
-      port: process.env.DB_PORT,
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
-    };
+
 
 // Initialize the pool
 const pool = new Pool({
-  ...poolConfig,
-  max: 20,
+  connectionString: process.env.DATABASE_URL,
+  ssl: { 
+    rejectUnauthorized: false,
+    sslmode: 'require'
+  },
+  port: 6543, // Supabase connection pool port
+  max: 10, // Stay within free tier limits
   idleTimeoutMillis: 30000
 });
 

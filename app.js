@@ -44,7 +44,7 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // Middleware
-const cors = require('cors');
+
 
 app.use(cors({
   origin: [

@@ -2,9 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { Pool } = require('pg'); // Add this import
+const { Pool } = require('pg');
 
 const app = express();
+
 // Database configuration with fallbacks
 const poolConfig = process.env.DATABASE_URL 
   ? { 
@@ -20,9 +21,19 @@ const poolConfig = process.env.DATABASE_URL
       ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
     };
 
+// Initialize the pool
+const pool = new Pool({
+  ...poolConfig,
+  max: 20,
+  idleTimeoutMillis: 30000
+});
 
+// Verify connection on startup
+pool.query('SELECT NOW()')
+  .then(() => console.log('✅ Database connected successfully'))
+  .catch(err => console.error('❌ Database connection error:', err));
 
-// Test DB route (now has access to pool)
+// Test DB route
 app.get('/api/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -96,4 +107,4 @@ app.listen(PORT, () => {
   console.log(`Database: ${process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'Not configured'}`);
 });
 
-module.exports = { app, pool }; // Export pool for use in other files
+module.exports = { app, pool };

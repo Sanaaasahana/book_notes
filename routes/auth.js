@@ -3,43 +3,42 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 const { authenticateJWT } = require('../middleware/auth');
 
-// Basic input validation middleware
-const validateInput = (req, res, next) => {
-  // Register validation
-  if (req.path === '/register') {
-    const { username, email, password } = req.body;
-    if (!username || username.length < 3 || username.length > 30) {
-      return res.status(400).json({ error: 'Username must be 3-30 characters' });
-    }
-    if (!email || !email.includes('@')) {
-      return res.status(400).json({ error: 'Please enter a valid email' });
-    }
-    if (!password || password.length < 8) {
-      return res.status(400).json({ error: 'Password must be at least 8 characters' });
-    }
+// Register route
+router.post('/register', (req, res, next) => {
+  const { username, email, password } = req.body;
+  
+  // Basic validation
+  if (!username || username.length < 3) {
+    return res.status(400).json({ error: 'Username must be at least 3 characters' });
   }
-
-  // Login validation
-  if (req.path === '/login') {
-    const { email, password } = req.body;
-    if (!email || !email.includes('@')) {
-      return res.status(400).json({ error: 'Please enter a valid email' });
-    }
-    if (!password) {
-      return res.status(400).json({ error: 'Password is required' });
-    }
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: 'Please enter a valid email' });
   }
+  if (!password || password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
+  
+  // Proceed to controller if validation passes
+  authController.register(req, res, next);
+});
 
-  next();
-};
+// Login route
+router.post('/login', (req, res, next) => {
+  const { email, password } = req.body;
+  
+  // Basic validation
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: 'Please enter a valid email' });
+  }
+  if (!password) {
+    return res.status(400).json({ error: 'Password is required' });
+  }
+  
+  // Proceed to controller if validation passes
+  authController.login(req, res, next);
+});
 
-// Routes
-router.post('/register', validateInput, authController.register);
-router.post('/login', validateInput, authController.login);
+// Protected route
 router.get('/me', authenticateJWT, authController.getCurrentUser);
-
-// Password reset routes (optional)
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password/:token', authController.resetPassword);
 
 module.exports = router;

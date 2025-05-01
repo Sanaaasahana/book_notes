@@ -44,16 +44,20 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // Middleware
+const cors = require('cors');
+
 app.use(cors({
   origin: [
-    'https://sahanabooknote.netlify.app',
-    'http://localhost:3000',
-    'http://localhost:5173'
+    'https://sahanabooknotes.netlify.app',
+    'http://localhost:3000' // Keep for local development
   ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Routes
 const authRoutes = require('./routes/auth');

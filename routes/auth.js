@@ -3,14 +3,13 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 const { authenticateJWT } = require('../middleware/auth');
 
-// Register route
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    
+
     // Validate input
     if (!username || !email || !password) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     // Check if user exists
@@ -20,12 +19,11 @@ router.post('/register', async (req, res) => {
     );
     
     if (userExists.rows.length > 0) {
-      return res.status(409).json({ error: 'User already exists' });
+      return res.status(409).json({ error: 'Email already registered' });
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
     const newUser = await pool.query(
@@ -40,8 +38,7 @@ router.post('/register', async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ 
-      status: 'success',
+    res.status(201).json({
       token,
       user: newUser.rows[0]
     });
@@ -53,7 +50,6 @@ router.post('/register', async (req, res) => {
     });
   }
 });
-
 // Login route
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body;

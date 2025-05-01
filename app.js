@@ -7,11 +7,6 @@ const { Pool } = require('pg');
 const app = express();
 
 // Database configuration with fallbacks
-
-
-// Initialize the pool
-
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -44,9 +39,6 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // Middleware
-
-
-// Body parsing middleware
 app.use(express.json());  // For parsing application/json
 app.use(express.urlencoded({ extended: true }));  // For parsing application/x-www-form-urlencoded
 
@@ -83,8 +75,6 @@ app.post('/api/auth/register', (req, res) => {
   res.status(201).json({ message: 'User registered successfully' });
 });
 
-
-
 // Routes
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');
@@ -107,7 +97,7 @@ app.get('/api/health', (req, res) => {
 
 // Enhanced error handling
 app.use((err, req, res, next) => {
-  console.error([${new Date().toISOString()}] Error:, err.stack);
+  console.error(`[${new Date().toISOString()}] Error:`, err.stack);
   
   if (err.message.includes('connection')) {
     return res.status(503).json({ 
@@ -124,9 +114,9 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(Server running on port ${PORT});
-  console.log(Environment: ${process.env.NODE_ENV || 'development'});
-  console.log(Database: ${process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'Not configured'});
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Database: ${process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'Not configured'}`);
 });
 
 module.exports = { app, pool };

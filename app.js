@@ -18,7 +18,8 @@ const pool = new Pool({
   },
   port: 5432, // Supabase connection pool port
   max: 10, // Stay within free tier limits
-  idleTimeoutMillis: 30000
+  idleTimeoutMillis: 30000,
+  family:4
 });
 
 // Verify connection on startup

@@ -8,7 +8,7 @@ const app = express();
 
 // Database configuration with fallbacks
 // In your backend app.js
-const { Pool } = require('pg');
+
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,

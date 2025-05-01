@@ -44,8 +44,7 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // Middleware
-const express = require('express');
-const app = express();
+
 
 // Body parsing middleware
 app.use(express.json());  // For parsing application/json

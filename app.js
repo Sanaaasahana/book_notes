@@ -48,7 +48,7 @@ const cors = require('cors');
 
 app.use(cors({
   origin: [
-    'https://sahanabooknotes.netlify.app',
+    'https://sahanabooknotes.netlify.app/',
     'http://localhost:3000' // Keep for local development
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],

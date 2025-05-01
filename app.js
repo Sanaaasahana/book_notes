@@ -10,24 +10,20 @@ const app = express();
 
 
 // Initialize the pool
+const { Pool } = require('pg');
+
 const pool = new Pool({
-  user: 'postgres',
-  host: 'db.viyprtgvlmsvogskilre.supabase.co',
-  database: 'postgres',
-  password: 'Mithun2605#sahana', // Make sure to encode or use process.env here
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
+    require: true, // Required for Neon
     rejectUnauthorized: false
-  },
-  max: 10,
-  idleTimeoutMillis: 30000,
-  family: 4 //  Force IPv4
+  }
 });
 
-// Verify connection on startup
+// Test connection
 pool.query('SELECT NOW()')
-  .then(() => console.log('✅ Database connected successfully'))
-  .catch(err => console.error('❌ Database connection error:', err));
+  .then(res => console.log('✅ Connected to Neon at:', res.rows[0].now))
+  .catch(err => console.error('❌ Neon connection failed:', err));
 
 // Test DB route
 app.get('/api/test-db', async (req, res) => {

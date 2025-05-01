@@ -6,8 +6,7 @@ const { authenticateJWT } = require('../middleware/auth');
 // Register route
 router.post('/register', (req, res, next) => {
   const { username, email, password } = req.body;
-  
-  // Basic validation
+
   if (!username || username.length < 3) {
     return res.status(400).json({ error: 'Username must be at least 3 characters' });
   }
@@ -17,24 +16,21 @@ router.post('/register', (req, res, next) => {
   if (!password || password.length < 8) {
     return res.status(400).json({ error: 'Password must be at least 8 characters' });
   }
-  
-  // Proceed to controller if validation passes
+
   authController.register(req, res, next);
 });
 
 // Login route
 router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
-  
-  // Basic validation
+
   if (!email || !email.includes('@')) {
     return res.status(400).json({ error: 'Please enter a valid email' });
   }
   if (!password) {
     return res.status(400).json({ error: 'Password is required' });
   }
-  
-  // Proceed to controller if validation passes
+
   authController.login(req, res, next);
 });
 

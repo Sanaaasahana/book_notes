@@ -16,7 +16,7 @@ const pool = new Pool({
     rejectUnauthorized: false,
     sslmode: 'require'
   },
-  port: 6543, // Supabase connection pool port
+  port: 5432, // Supabase connection pool port
   max: 10, // Stay within free tier limits
   idleTimeoutMillis: 30000
 });
